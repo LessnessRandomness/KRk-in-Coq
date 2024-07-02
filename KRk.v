@@ -488,16 +488,16 @@ Qed.
 (*****************)
 
 Definition StalemateType1 Nx Ny (P: Position Nx Ny) (Hx: 3 <= Nx) (Hy: 3 <= Ny) :=
-  let P' := Normalize P in Turn P = Black /\
-  BKx P' = 0 /\ BKy P' = 0 /\ WRx P' = 1 /\ WRy P' = 1 /\
-  (WKx P' = 0 /\ WKy P' = 2 \/ WKx P' = 1 /\ WKy P' = 2 \/ WKx P' = 2 /\ WKy P' = 2 \/
-   WKx P' = 2 /\ WKy P' = 1 \/ WKx P' = 2 /\ WKy P' = 0).
+  Turn P = Black /\
+  BKx P = 0 /\ BKy P = 0 /\ WRx P = 1 /\ WRy P = 1 /\
+  (WKx P = 0 /\ WKy P = 2 \/ WKx P = 1 /\ WKy P = 2 \/ WKx P = 2 /\ WKy P = 2 \/
+   WKx P = 2 /\ WKy P = 1 \/ WKx P = 2 /\ WKy P = 0).
 
 Definition StalemateType2 Nx Ny (P: Position Nx Ny) (Hx: 3 <= Nx) (Hy: 3 <= Ny) :=
-  let P' := Normalize P in Turn P = Black /\
-  BKx P' = 0 /\ BKy P' = 0 /\
-  (WKx P' = 0 /\ WKy P' = 2 /\ WRx P' = 1 /\ 2 <= WRy P' \/
-   WKx P' = 2 /\ WKy P' = 0 /\ 2 <= WRx P' /\ WRy P' = 1).
+  Turn P = Black /\
+  BKx P = 0 /\ BKy P = 0 /\
+  (WKx P = 0 /\ WKy P = 2 /\ WRx P = 1 /\ 2 <= WRy P \/
+   WKx P = 2 /\ WKy P = 0 /\ 2 <= WRx P /\ WRy P = 1).
 
 
 Theorem StalemateAllTypes Nx Ny (P: Position Nx Ny) (Hx: 3 <= Nx) (Hy: 3 <= Ny):
@@ -518,7 +518,7 @@ Proof.
            -- unfold BlackKingAttacked in H6. lia.
         ++ assert (WRx P = 0 \/ WRx P = 1 \/ 2 <= WRx P) by lia. intuition.
            -- unfold BlackKingAttacked in H6. lia.
-           -- left. unfold StalemateType1, Normalize in *. repeat destruct Compare_dec.le_lt_dec; lia.
+           -- left. unfold StalemateType1 in *. lia.
            -- exfalso. refine (H13 (@Build_Position _ _ (WKx P) (WKy P) (WRx P) (WRy P) 1 0 _ White) _).
               Unshelve. 2:{ abstract (destruct P; simpl in *; lia). }
               unfold LegalBlackMove, LegalPosition; simpl in *; intuition.
@@ -529,8 +529,7 @@ Proof.
               ** unfold BlackKingAttacked in *; simpl in *; lia.
         ++ assert (WRx P = 0 \/ WRx P = 1 \/ 2 <= WRx P) by lia. intuition.
            -- unfold NotOnSameSquare in *; simpl in *; lia.
-           -- right. unfold StalemateType2, Normalize.
-              repeat destruct Compare_dec.le_lt_dec; lia.
+           -- right. unfold StalemateType2. lia.
            -- exfalso. refine (H13 (@Build_Position _ _ (WKx P) (WKy P) (WRx P) (WRy P) 1 0 _ White) _).
               Unshelve. 2:{ abstract (destruct P; simpl in *; lia). }
               unfold LegalBlackMove, LegalPosition; simpl in *; intuition.
@@ -540,8 +539,7 @@ Proof.
               ** unfold NotKingNextToKing; simpl in *; lia.
               ** unfold BlackKingAttacked in *; simpl in *; lia.
         ++ assert (WRx P = 1 \/ WRx P <> 1) by lia. intuition.
-           -- right. unfold StalemateType2, Normalize.
-              repeat destruct Compare_dec.le_lt_dec; lia.
+           -- right. unfold StalemateType2. lia.
            -- exfalso. refine (H13 (@Build_Position _ _ (WKx P) (WKy P) (WRx P) (WRy P) 1 0 _ White) _).
               Unshelve. 2:{ abstract (destruct P; simpl in *; lia). }
               unfold LegalBlackMove, LegalPosition; simpl in *; intuition.
@@ -599,7 +597,7 @@ Proof.
            -- unfold BlackKingAttacked in *; lia.
         ++ assert (WRx P = 0 \/ WRx P = 1 \/ 2 <= WRx P) by lia. intuition.
            -- unfold BlackKingAttacked in *; lia.
-           -- left. unfold StalemateType1, Normalize. repeat destruct Compare_dec.le_lt_dec; lia.
+           -- left. unfold StalemateType1. lia.
            -- exfalso. refine (H13 (@Build_Position _ _ (WKx P) (WKy P) (WRx P) (WRy P) 1 0 _ White) _).
               Unshelve. 2:{ abstract (destruct P; simpl in *; lia). }
               unfold LegalBlackMove, LegalPosition; simpl in *; intuition.
@@ -669,7 +667,7 @@ Proof.
       * assert (WRy P = 0 \/ WRy P = 1 \/ 2 <= WRy P) by lia. intuition.
         ++ unfold BlackKingAttacked in *; lia.
         ++ assert (WKy P <= 2 \/ 3 <= WKy P) by lia. intuition.
-           -- left. unfold StalemateType1, Normalize. repeat destruct Compare_dec.le_lt_dec; lia.
+           -- left. unfold StalemateType1. lia.
            -- exfalso. refine (H13 (@Build_Position _ _ (WKx P) (WKy P) (WRx P) (WRy P) 1 1 _ White) _).
               Unshelve. 2:{ abstract (destruct P; simpl in *; lia). }
               unfold LegalBlackMove, LegalPosition; simpl in *; intuition.
@@ -698,7 +696,7 @@ Proof.
                  +++ unfold NotOnSameSquare; simpl in *; lia.
                  +++ unfold NotKingNextToKing; simpl in *; lia.
                  +++ unfold BlackKingAttacked in *; simpl in *; lia.
-           -- right. unfold StalemateType2, Normalize. repeat destruct Compare_dec.le_lt_dec; lia.
+           -- right. unfold StalemateType2. lia.
            -- exfalso. refine (H13 (@Build_Position _ _ (WKx P) (WKy P) (WRx P) (WRy P) 0 1 _ White) _).
               Unshelve. 2:{ abstract (destruct P; simpl in *; lia). }
               unfold LegalBlackMove, LegalPosition; simpl in *; intuition.
@@ -799,45 +797,160 @@ Proof.
               ** unfold NotOnSameSquare; simpl in *; lia.
               ** unfold NotKingNextToKing; simpl in *; lia.
               ** unfold BlackKingAttacked in *; simpl in *; lia.
-  + unfold StalemateType1, Normalize in *. repeat destruct Compare_dec.le_lt_dec; try lia.
-    unfold Stalemate, LegalPosition. intuition; unfold NotOnSameSquare, NotKingNextToKing, BlackKingAttacked in *; try lia.
-    - unfold LegalBlackMove in *; intuition. destruct P, P'; simpl in *.
-      unfold MoveBlackKing, OtherAfterMoveBlackKing in *; simpl in *.
-      unfold LegalPosition in *; simpl in *; intuition.
-      * unfold BlackKingAttacked, NotOnSameSquare, NotKingNextToKing in *; simpl in *; subst. lia.
-      * unfold BlackKingAttacked, NotOnSameSquare, NotKingNextToKing in *; simpl in *; subst. lia.
-    - unfold LegalBlackMove in *; intuition. destruct P, P'; simpl in *.
-      unfold MoveBlackKing, OtherAfterMoveBlackKing in *; simpl in *.
-      unfold LegalPosition in *; simpl in *; intuition.
-      * unfold BlackKingAttacked, NotOnSameSquare, NotKingNextToKing in *; simpl in *; subst. lia.
-      * unfold BlackKingAttacked, NotOnSameSquare, NotKingNextToKing in *; simpl in *; subst. lia.
-    - unfold LegalBlackMove in *; intuition. destruct P, P'; simpl in *.
-      unfold MoveBlackKing, OtherAfterMoveBlackKing in *; simpl in *.
-      unfold LegalPosition in *; simpl in *; intuition.
-      * unfold BlackKingAttacked, NotOnSameSquare, NotKingNextToKing in *; simpl in *; subst. lia.
-      * unfold BlackKingAttacked, NotOnSameSquare, NotKingNextToKing in *; simpl in *; subst. lia.
-    - unfold LegalBlackMove in *; intuition. destruct P, P'; simpl in *.
-      unfold MoveBlackKing, OtherAfterMoveBlackKing in *; simpl in *.
-      unfold LegalPosition in *; simpl in *; intuition.
-      * unfold BlackKingAttacked, NotOnSameSquare, NotKingNextToKing in *; simpl in *; subst. lia.
-      * unfold BlackKingAttacked, NotOnSameSquare, NotKingNextToKing in *; simpl in *; subst. lia.
-    - unfold LegalBlackMove in *; intuition. destruct P, P'; simpl in *.
-      unfold MoveBlackKing, OtherAfterMoveBlackKing in *; simpl in *.
-      unfold LegalPosition in *; simpl in *; intuition.
-      * unfold BlackKingAttacked, NotOnSameSquare, NotKingNextToKing in *; simpl in *; subst. lia.
-      * unfold BlackKingAttacked, NotOnSameSquare, NotKingNextToKing in *; simpl in *; subst. lia.
-  + unfold StalemateType2, Normalize in *. repeat destruct Compare_dec.le_lt_dec; try lia.
-    unfold Stalemate, LegalPosition. intuition; unfold NotOnSameSquare, NotKingNextToKing, BlackKingAttacked in *; try lia.
-    - unfold LegalBlackMove in *; intuition. destruct P, P'; simpl in *.
-      unfold MoveBlackKing, OtherAfterMoveBlackKing in *; simpl in *.
-      unfold LegalPosition in *; simpl in *; intuition.
-      * unfold BlackKingAttacked, NotOnSameSquare, NotKingNextToKing in *; simpl in *; subst. lia.
-      * unfold BlackKingAttacked, NotOnSameSquare, NotKingNextToKing in *; simpl in *; subst. lia.
-    - unfold LegalBlackMove in *; intuition. destruct P, P'; simpl in *.
-      unfold MoveBlackKing, OtherAfterMoveBlackKing in *; simpl in *.
-      unfold LegalPosition in *; simpl in *; intuition.
-      * unfold BlackKingAttacked, NotOnSameSquare, NotKingNextToKing in *; simpl in *; subst. lia.
-      * unfold BlackKingAttacked, NotOnSameSquare, NotKingNextToKing in *; simpl in *; subst. lia.
-  + unfold StalemateType1, StalemateType2, Normalize. repeat destruct Compare_dec.le_lt_dec; try lia.
-    unfold Stalemate, LegalPosition in *. intuition.
+  + unfold StalemateType1, Stalemate, LegalPosition in *.
+    intuition; unfold NotOnSameSquare, NotKingNextToKing, BlackKingAttacked in *; intuition; try lia.
+    - unfold LegalBlackMove in *; intuition.
+      unfold MoveBlackKing, OtherAfterMoveBlackKing, LegalPosition, NotOnSameSquare, NotKingNextToKing, BlackKingAttacked in *.
+      destruct P, P'; simpl in *. subst; simpl in *. clear H4 H5 H6 H7 H14. destruct H10 as [H1 [H2 [H3 H4]]]; subst. lia.
+    - unfold LegalBlackMove in *; intuition.
+      unfold MoveBlackKing, OtherAfterMoveBlackKing, LegalPosition, NotOnSameSquare, NotKingNextToKing, BlackKingAttacked in *.
+      destruct P, P'; simpl in *. subst; simpl in *. clear H4 H5 H6 H7 H14. destruct H11 as [H1 [H2 [H3 H4]]]. subst. lia.
+    - unfold LegalBlackMove in *; intuition.
+      unfold MoveBlackKing, OtherAfterMoveBlackKing, LegalPosition, NotOnSameSquare, NotKingNextToKing, BlackKingAttacked in *.
+      destruct P, P'; simpl in *. subst; simpl in *. clear H4 H5 H6 H7 H14. destruct H10 as [H1 [H2 [H3 H4]]]. subst. lia.
+    - unfold LegalBlackMove in *; intuition.
+      unfold MoveBlackKing, OtherAfterMoveBlackKing, LegalPosition, NotOnSameSquare, NotKingNextToKing, BlackKingAttacked in *.
+      destruct P, P'; simpl in *. subst. simpl in *. clear H4 H5 H6 H7 H14. destruct H11 as [H1 [H2 [H3 H4]]]. subst. lia.
+    - unfold LegalBlackMove in *; intuition.
+      unfold MoveBlackKing, OtherAfterMoveBlackKing, LegalPosition, NotOnSameSquare, NotKingNextToKing, BlackKingAttacked in *.
+      destruct P, P'; simpl in *. subst. simpl in *. clear H4 H5 H6 H7 H14. destruct H11 as [H1 [H2 [H3 H4]]]. subst. lia.
+  + unfold StalemateType2, Stalemate, LegalPosition in *.
+    intuition; unfold NotOnSameSquare, NotKingNextToKing, BlackKingAttacked in *; intuition; try lia.
+    - unfold LegalBlackMove in *; intuition.
+      unfold MoveBlackKing, OtherAfterMoveBlackKing, LegalPosition, NotOnSameSquare, NotKingNextToKing, BlackKingAttacked in *.
+      destruct P, P'; simpl in *. subst. simpl in *. clear H4 H5 H6 H7 H14. destruct H11 as [H1 [H2 [H3 H4]]]. subst. lia.
+    - unfold LegalBlackMove in *; intuition.
+      unfold MoveBlackKing, OtherAfterMoveBlackKing, LegalPosition, NotOnSameSquare, NotKingNextToKing, BlackKingAttacked in *.
+      destruct P, P'; simpl in *. subst. simpl in *. clear H4 H5 H6 H7 H14. destruct H11 as [H1 [H2 [H3 H4]]]. subst. lia.
+  + exfalso. unfold Stalemate in *. intuition. unfold LegalPosition in *. intuition.
+    assert (WKx P = 0 \/ WKx P = 1 \/ WKx P = 2 \/ 3 <= WKx P) by lia. intuition.
+    - assert (BKy P <= WKy P + 1 /\ WKy P <= BKy P + 1 \/ WKy P + 2 <= BKy P \/ BKy P + 2 <= WKy P) by lia. intuition.
+      * unfold NotKingNextToKing in *. lia.
+      * assert (WRx P = 0 \/ WRx P = 1 \/ 2 <= WRx P) by lia. intuition.
+        ++ assert (WRy P < WKy P \/ WRy P = WKy P \/ WKy P < WRy P) by lia. intuition.
+           -- refine (H10 (@Build_Position _ _ (WKx P) (WKy P) (WRx P) (WRy P) 1 (BKy P) _ White) _). Unshelve.
+              2:{ abstract (destruct P; simpl in *; lia). }
+              unfold LegalBlackMove, LegalPosition; simpl in *; intuition.
+              ** unfold MoveBlackKing; simpl. lia.
+              ** unfold OtherAfterMoveBlackKing; simpl. lia.
+              ** unfold NotOnSameSquare; simpl. lia.
+              ** unfold NotKingNextToKing; simpl. lia.
+              ** unfold BlackKingAttacked in *; simpl in *. lia.
+           -- unfold NotOnSameSquare in *; simpl in *. lia.
+           -- assert (WRy P = BKy P \/ WRy P <> BKy P) by lia. intuition.
+              ** unfold NotOnSameSquare in *; simpl in *. lia.
+              ** refine (H10 (@Build_Position _ _ (WKx P) (WKy P) (WRx P) (WRy P) 1 (BKy P) _ White) _). Unshelve.
+                 2:{ abstract (destruct P; simpl in *; lia). }
+                 unfold LegalBlackMove, LegalPosition; simpl in *; intuition.
+                 +++ unfold MoveBlackKing; simpl. lia.
+                 +++ unfold OtherAfterMoveBlackKing; simpl. lia.
+                 +++ unfold NotOnSameSquare; simpl. lia.
+                 +++ unfold NotKingNextToKing; simpl. lia.
+                 +++ unfold BlackKingAttacked in *; simpl in *. lia.
+        ++ assert (WRy P + 1 <= BKy P \/ WRy P = BKy P \/ BKy P + 1 = WRy P \/ BKy P + 2 <= WRy P) by lia.
+           intuition.
+           -- refine (H10 (@Build_Position _ _ (WKx P) (WKy P) (WRx P) (WRy P) 0 (BKy P + 1) _ White) _). Unshelve.
+              2:{ abstract (destruct P; simpl in *; lia). }
+              unfold LegalBlackMove, LegalPosition; simpl in *; intuition.
+              ** unfold MoveBlackKing; simpl. lia.
+              ** unfold OtherAfterMoveBlackKing; simpl. lia.
+              ** unfold NotOnSameSquare; simpl. lia.
+              ** unfold NotKingNextToKing; simpl. lia.
+              ** unfold BlackKingAttacked in *; simpl in *. lia.
+           -- refine (H10 (@Build_Position _ _ (WKx P) (WKy P) (WRx P) (WRy P) 1 (BKy P) _ White) _). Unshelve.
+              2:{ abstract (destruct P; simpl in *; lia). }
+              unfold LegalBlackMove, LegalPosition; simpl in *; intuition.
+              ** unfold MoveBlackKing; simpl. lia.
+              ** unfold OtherAfterMoveBlackKing; simpl. lia.
+              ** unfold NotOnSameSquare; simpl. lia.
+              ** unfold NotKingNextToKing; simpl. lia.
+              ** unfold BlackKingAttacked in *; simpl in *. lia.
+           -- refine (H10 (@Build_Position _ _ (WKx P) (WKy P) (WRx P) (WRy P) 1 (BKy P + 1) _ White) _). Unshelve.
+              2:{ abstract (destruct P; simpl in *; lia). }
+              unfold LegalBlackMove, LegalPosition; simpl in *; intuition.
+              ** unfold MoveBlackKing; simpl. lia.
+              ** unfold OtherAfterMoveBlackKing; simpl. lia.
+              ** unfold NotOnSameSquare; simpl. lia.
+              ** unfold NotKingNextToKing; simpl. lia.
+              ** unfold BlackKingAttacked in *; simpl in *. lia.
+           -- refine (H10 (@Build_Position _ _ (WKx P) (WKy P) (WRx P) (WRy P) 0 (BKy P + 1) _ White) _). Unshelve.
+              2:{ abstract (destruct P; simpl in *; lia). }
+              unfold LegalBlackMove, LegalPosition; simpl in *; intuition.
+              ** unfold MoveBlackKing; simpl. lia.
+              ** unfold OtherAfterMoveBlackKing; simpl. lia.
+              ** unfold NotOnSameSquare; simpl. lia.
+              ** unfold NotKingNextToKing; simpl. lia.
+              ** unfold BlackKingAttacked in *; simpl in *. lia.
+        ++ refine (H10 (@Build_Position _ _ (WKx P) (WKy P) (WRx P) (WRy P) 1 (BKy P) _ White) _). Unshelve.
+           2:{ abstract (destruct P; simpl in *; lia). }
+           unfold LegalBlackMove, LegalPosition; simpl in *; intuition.
+           -- unfold MoveBlackKing; simpl. lia.
+           -- unfold OtherAfterMoveBlackKing; simpl. lia.
+           -- unfold NotOnSameSquare; simpl. lia.
+           -- unfold NotKingNextToKing; simpl. lia.
+           -- unfold BlackKingAttacked in *; simpl in *. lia.
+      * assert (WRx P = 0 \/ WRx P = 1 \/ 2 <= WRx P) by lia. intuition.
+        ++ assert (WRy P = WKy P \/ WRy P <> WKy P) by lia. intuition.
+           -- unfold NotOnSameSquare in *; lia.
+           -- assert (WRy P = BKy P \/ WRy P <> BKy P) by lia. intuition.
+              ** unfold NotOnSameSquare in *; lia.
+              ** refine (H10 (@Build_Position _ _ (WKx P) (WKy P) (WRx P) (WRy P) 1 (BKy P) _ White) _). Unshelve.
+                 2:{ abstract (destruct P; simpl in *; lia). }
+                 unfold LegalBlackMove, LegalPosition; simpl in *; intuition.
+                 +++ unfold MoveBlackKing; simpl. lia.
+                 +++ unfold OtherAfterMoveBlackKing; simpl. lia.
+                 +++ unfold NotOnSameSquare; simpl. lia.
+                 +++ unfold NotKingNextToKing; simpl. lia.
+                 +++ unfold BlackKingAttacked in *; simpl in *. lia.
+        ++ assert (WRy P + 2 <= BKy P \/ WRy P + 1 = BKy P \/ WRy P = BKy P \/ BKy P + 1 = WRy P \/ BKy P + 2 <= WRy P) by lia.
+           intuition.
+           -- refine (H10 (@Build_Position _ _ (WKx P) (WKy P) (WRx P) (WRy P) 0 (BKy P - 1) _ White) _). Unshelve.
+              2:{ abstract (destruct P; simpl in *; lia). }
+              unfold LegalBlackMove, LegalPosition; simpl in *; intuition.
+              ** unfold MoveBlackKing; simpl. lia.
+              ** unfold OtherAfterMoveBlackKing; simpl. lia.
+              ** unfold NotOnSameSquare; simpl. lia.
+              ** unfold NotKingNextToKing; simpl. lia.
+              ** unfold BlackKingAttacked in *; simpl in *. lia.
+           -- refine (H10 (@Build_Position _ _ (WKx P) (WKy P) (WRx P) (WRy P) 1 (BKy P - 1) _ White) _). Unshelve.
+              2:{ abstract (destruct P; simpl in *; lia). }
+              unfold LegalBlackMove, LegalPosition; simpl in *; intuition.
+              ** unfold MoveBlackKing; simpl. lia.
+              ** unfold OtherAfterMoveBlackKing; simpl. lia.
+              ** unfold NotOnSameSquare; simpl. lia.
+              ** unfold NotKingNextToKing; simpl. lia.
+              ** unfold BlackKingAttacked in *; simpl in *. lia.
+           -- refine (H10 (@Build_Position _ _ (WKx P) (WKy P) (WRx P) (WRy P) 1 (BKy P) _ White) _). Unshelve.
+              2:{ abstract (destruct P; simpl in *; lia). }
+              unfold LegalBlackMove, LegalPosition; simpl in *; intuition.
+              ** unfold MoveBlackKing; simpl. lia.
+              ** unfold OtherAfterMoveBlackKing; simpl. lia.
+              ** unfold NotOnSameSquare; simpl. lia.
+              ** unfold NotKingNextToKing; simpl. lia.
+              ** unfold BlackKingAttacked in *; simpl in *. lia.
+           -- refine (H10 (@Build_Position _ _ (WKx P) (WKy P) (WRx P) (WRy P) 0 (BKy P - 1) _ White) _). Unshelve.
+              2:{ abstract (destruct P; simpl in *; lia). }
+              unfold LegalBlackMove, LegalPosition; simpl in *; intuition.
+              ** unfold MoveBlackKing; simpl. lia.
+              ** unfold OtherAfterMoveBlackKing; simpl. lia.
+              ** unfold NotOnSameSquare; simpl. lia.
+              ** unfold NotKingNextToKing; simpl. lia.
+              ** unfold BlackKingAttacked in *; simpl in *. lia.
+           -- refine (H10 (@Build_Position _ _ (WKx P) (WKy P) (WRx P) (WRy P) 0 (BKy P - 1) _ White) _). Unshelve.
+              2:{ abstract (destruct P; simpl in *; lia). }
+              unfold LegalBlackMove, LegalPosition; simpl in *; intuition.
+              ** unfold MoveBlackKing; simpl. lia.
+              ** unfold OtherAfterMoveBlackKing; simpl. lia.
+              ** unfold NotOnSameSquare; simpl. lia.
+              ** unfold NotKingNextToKing; simpl. lia.
+              ** unfold BlackKingAttacked in *; simpl in *. lia.
+        ++ refine (H10 (@Build_Position _ _ (WKx P) (WKy P) (WRx P) (WRy P) 1 (BKy P) _ White) _). Unshelve.
+           2:{ abstract (destruct P; simpl in *; lia). }
+           unfold LegalBlackMove, LegalPosition; simpl in *; intuition.
+           -- unfold MoveBlackKing; simpl. lia.
+           -- unfold OtherAfterMoveBlackKing; simpl. lia.
+           -- unfold NotOnSameSquare; simpl. lia.
+           -- unfold NotKingNextToKing; simpl. lia.
+           -- unfold BlackKingAttacked in *; simpl in *. lia.
+    - 
 Admitted.
