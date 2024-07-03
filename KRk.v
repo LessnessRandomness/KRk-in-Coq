@@ -564,43 +564,21 @@ Proof.
       * assert (WRx P = 1 /\ (WRy P = 1 \/ 2 <= WRy P) \/ WRx P = 0 /\ WKy P + 1 <= WRy P \/ 2 <= WRx P /\ 1 <= WRy P).
         { unfold BlackKingAttacked, NotOnSameSquare in *; lia. }
         intuition; try (BK_moves H9 Nx Ny P).
-    - assert ((WKx P = 0 \/ WKx P = 1) /\ (WKy P + 3 <= BKy P \/ WKy P + 2 = BKy P \/ BKy P + 2 = WKy P \/ BKy P + 3 <= WKy P) \/
-              WKx P = 2 /\ (WKy P + 3 <= BKy P \/ WKy P + 2 = BKy P \/ WKy P + 1 = BKy P \/ WKy P = BKy P \/ BKy P + 1 = WKy P \/ BKy P + 2 = WKy P \/ BKy P + 3 <= WKy P) \/
-              3 <= WKx P).
-      { unfold NotKingNextToKing in *; lia. }
-      intuition.
-      * assert (WRx P = 0 /\ WRy P < WKy P \/ 1 <= WRx P /\ (WRy P < BKy P \/ BKy P < WRy P)).
-        { unfold BlackKingAttacked, NotOnSameSquare in *; lia. }
-        intuition; try (BK_moves H9 Nx Ny P).
-      * assert (WRx P = 0 /\ WRy P < WKy P \/ WRx P = 1 /\ (WRy P + 1 <= BKy P \/ BKy P + 1 = WRy P \/ BKy P + 2 <= WRy P) \/
-                2 <= WRx P /\ WRy P <> BKy P).
-        { unfold BlackKingAttacked, NotOnSameSquare in *; lia. }
-        intuition; try (BK_moves H9 Nx Ny P).
-      * assert (WRx P = 0 /\ WRy P > WKy P \/ WRx P = 1 /\ (BKy P + 1 <= WRy P \/ WRy P + 1 = BKy P \/ WRy P + 2 <= BKy P) \/
-                2 <= WRx P /\ WRy P <> BKy P).
-        { unfold BlackKingAttacked, NotOnSameSquare in *; lia. }
-        intuition; try (BK_moves H9 Nx Ny P).
-      * assert (WRx P = 0 /\ WRy P > WKy P \/ 1 <= WRx P /\ (BKy P < WRy P \/ WRy P < BKy P)).
-        { unfold BlackKingAttacked, NotOnSameSquare in *; lia. }
-        intuition; try (BK_moves H9 Nx Ny P).
-      * assert (WRx P = 0 /\ WRy P < WKy P \/ 1 <= WRx P /\ (BKy P < WRy P \/ WRy P < BKy P)).
-        { unfold BlackKingAttacked, NotOnSameSquare in *; lia. }
-        intuition; try (BK_moves H9 Nx Ny P).
-      * assert (WRx P = 1 /\ (WRy P < WKy P \/ WRy P + 1 = BKy P \/ BKy P + 1 = WRy P \/ BKy P + 2 <= WRy P) \/ 2 <= WRx P /\ (WRy P < BKy P \/ BKy P < WRy P)).
-        { unfold BlackKingAttacked, NotOnSameSquare in *; lia. }
-        intuition; try (BK_moves H9 Nx Ny P).
-      * admit.
-      * admit.
-      * admit.
-      * admit.
-      * admit.
-      * admit.
-      * admit.
-      * admit.
-      * admit.
-      * admit.
-    - admit.
-    - admit.
+    - assert (WKx P = 0 \/ WKx P = 1 \/ WKx P = 2 \/ 3 <= WKx P) by lia.
+      assert (WKy P + 3 <= BKy P \/ WKy P + 2 = BKy P \/ WKy P + 1 = BKy P \/ WKy P = BKy P \/ BKy P + 1 = WKy P \/ BKy P + 2 = WKy P \/ BKy P + 3 <= WKy P) by lia.
+      assert (WRx P = 0 \/ WRx P = 1 \/ 2 <= WRx P) by lia.
+      assert (WRy P + 2 <= BKy P \/ WRy P + 1 = BKy P \/ WRy P = BKy P \/ BKy P + 1 = WRy P \/ BKy P + 2 <= WRy P) by lia.
+      intuition'; try (BK_moves H9 Nx Ny P).
+    - assert (WKy P = 0 \/ WKy P = 1 \/ WKy P = 2 \/ 3 <= WKy P) by lia.
+      assert (WKx P + 3 <= BKx P \/ WKx P + 2 = BKx P \/ WKx P + 1 = BKx P \/ WKx P = BKx P \/ BKx P + 1 = WKx P \/ BKx P + 2 = WKx P \/ BKx P + 3 <= WKx P) by lia.
+      assert (WRy P = 0 \/ WRy P = 1 \/ 2 <= WRy P) by lia.
+      assert (WRx P + 2 <= BKx P \/ WRx P + 1 = BKx P \/ WRx P = BKx P \/ BKx P + 1 = WRx P \/ BKx P + 2 <= WRx P) by lia.
+      intuition'; try (BK_moves H9 Nx Ny P).
+    - assert (WKx P + 3 <= BKx P \/ WKx P + 2 = BKx P \/ WKx P + 1 = BKx P \/ WKx P = BKx P \/ BKx P + 1 = WKx P \/ BKx P + 2 = WKx P \/ BKx P + 3 <= WKx P) by lia.
+      assert (WKy P + 3 <= BKy P \/ WKy P + 2 = BKy P \/ WKy P + 1 = BKy P \/ WKy P = BKy P \/ BKy P + 1 = WKy P \/ BKy P + 2 = WKy P \/ BKy P + 3 <= WKy P) by lia.
+      assert (WRx P + 2 <= BKx P \/ WRx P + 1 = BKx P \/ WRx P = BKx P \/ BKx P + 1 = WRx P \/ BKx P + 2 <= WRx P) by lia.
+      assert (WRy P + 2 <= BKy P \/ WRy P + 1 = BKy P \/ WRy P = BKy P \/ BKy P + 1 = WRy P \/ BKy P + 2 <= WRy P) by lia.
+      intuition'; try (BK_moves H9 Nx Ny P).
   + unfold Stalemate. intuition.
     - unfold StalemateType1, LegalPosition, NotOnSameSquare, NotKingNextToKing in *. lia.
     - unfold StalemateType1, BlackKingAttacked in *. lia.
@@ -633,6 +611,8 @@ Proof.
       * destruct P, P'. simpl in *. subst. unfold NotOnSameSquare in *; simpl in *.
         unfold BlackKingAttacked in *; simpl in *. unfold NotKingNextToKing in *; simpl in *.
         unfold MoveBlackKing in *; simpl in *. lia.
-Admitted.
+Qed.
+
+
 
 
