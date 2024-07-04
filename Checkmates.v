@@ -62,3 +62,23 @@ Proof.
       intuition; destruct P, P'; simpl in *; subst;
       unfold NotOnSameSquare, BlackKingAttacked, NotKingNextToKing, MoveBlackKing in *; simpl in *; lia.
 Qed.
+
+Definition CheckmateThm2 Nx Ny (P: Position Nx Ny) (Hx: 3 <= Nx) (Hy: 3 <= Ny):
+  Mate P <-> (CheckmateType1 (Normalize P) Hx Hy \/ CheckmateType2 (Normalize P) Hx Hy).
+Proof.
+  intuition; unfold Normalize in *; repeat destruct Compare_dec.le_lt_dec.
+  + apply CheckmateAllTypes; auto.
+  + rewrite MateAfterMirrorY in H. apply CheckmateAllTypes; auto. unfold MirrorY; simpl. lia.
+  + apply CheckmateAllTypes.
+    - unfold MirrorX; simpl. lia.
+    - rewrite <- MateAfterMirrorX; auto.
+  + rewrite MateAfterMirrorX, MateAfterMirrorY in H. apply CheckmateAllTypes; auto. unfold MirrorY, MirrorX; simpl. lia.
+  + rewrite (CheckmateAllTypes P Hx Hy); auto.
+  + rewrite MateAfterMirrorY. rewrite (CheckmateAllTypes _ Hx Hy); auto. unfold MirrorY; simpl. lia.
+  + rewrite MateAfterMirrorX. rewrite (CheckmateAllTypes _ Hx Hy); auto. unfold MirrorX; simpl. lia.
+  + rewrite MateAfterMirrorX, MateAfterMirrorY. rewrite (CheckmateAllTypes _ Hx Hy); auto. unfold MirrorX, MirrorY; simpl. lia.
+  + rewrite (CheckmateAllTypes P Hx Hy); auto.
+  + rewrite MateAfterMirrorY. rewrite (CheckmateAllTypes _ Hx Hy); auto. unfold MirrorY; simpl. lia.
+  + rewrite MateAfterMirrorX. rewrite (CheckmateAllTypes _ Hx Hy); auto. unfold MirrorX; simpl. lia.
+  + rewrite MateAfterMirrorX, MateAfterMirrorY. rewrite (CheckmateAllTypes _ Hx Hy); auto. unfold MirrorX, MirrorY; simpl. lia.
+Qed.
