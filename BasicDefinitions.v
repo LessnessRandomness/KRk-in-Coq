@@ -26,11 +26,12 @@ Definition NotOnSameSquare Nx Ny (P: Position Nx Ny) :=
 Definition NotKingNextToKing Nx Ny (P: Position Nx Ny) :=
   WKx P > BKx P + 1 \/ BKx P > WKx P + 1 \/ WKy P > BKy P + 1 \/ BKy P > WKy P + 1.
 
-Definition BlackKingAttacked Nx Ny (P: Position Nx Ny) :=
-  (WRx P = BKx P /\ (WKx P <> WRx P \/ WKx P = WRx P /\ (WKy P <= BKy P /\ WKy P <= WRy P \/ BKy P <= WKy P /\ WRy P <= WKy P)) \/
-   WRy P = BKy P /\ (WKy P <> WRy P \/ WKy P = WRy P /\ (WKx P <= BKx P /\ WKx P <= WRx P \/ BKx P <= WKx P /\ WRx P <= WKx P))) /\
-   (WRx P <> BKx P \/ WRy P <> BKy P).
+Definition Between x1 x2 x :=
+  x1 < x < x2 \/ x2 < x < x1.
 
+Definition BlackKingAttacked Nx Ny (P: Position Nx Ny) :=
+  WRx P = BKx P /\ (WKx P <> WRx P \/ ~ Between (WRy P) (BKy P) (WKy P)) \/
+  WRy P = BKy P /\ (WKy P <> WRy P \/ ~ Between (WRx P) (BKx P) (WKx P)).
 
 Definition LegalPosition Nx Ny (P: Position Nx Ny) :=
   NotOnSameSquare P /\
@@ -54,9 +55,6 @@ Definition LegalMoveWhiteKing Nx Ny (P1 P2: Position Nx Ny) :=
   Turn P2 = Black /\
   LegalPosition P1 /\
   LegalPosition P2.
-
-Definition Between x1 x2 x :=
-  x1 < x < x2 \/ x2 < x < x1.
 
 Definition MoveWhiteRook Nx Ny (P1 P2: Position Nx Ny) :=
   (WRx P1 = WRx P2 /\ WRy P1 <> WRy P2 /\
