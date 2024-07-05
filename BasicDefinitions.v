@@ -30,8 +30,8 @@ Definition Between x1 x2 x :=
   x1 < x < x2 \/ x2 < x < x1.
 
 Definition BlackKingAttacked N (P: Position N) :=
-  WRx P = BKx P /\ (WKx P <> WRx P \/ ~ Between (WRy P) (BKy P) (WKy P)) \/
-  WRy P = BKy P /\ (WKy P <> WRy P \/ ~ Between (WRx P) (BKx P) (WKx P)).
+  WRx P = BKx P /\ BKy P <> WRy P /\ (~ Between (WRy P) (BKy P) (WKy P) \/ WRx P <> WKx P) \/
+  WRy P = BKy P /\ BKx P <> WRx P /\ (~ Between (WRx P) (BKx P) (WKx P) \/ WRy P <> WKy P).
 
 Definition LegalPosition N (P: Position N) :=
   NotOnSameSquare P /\
