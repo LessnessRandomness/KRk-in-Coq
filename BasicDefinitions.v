@@ -111,4 +111,4 @@ Inductive BlackLoss N: Position N -> nat -> Prop :=
                   (exists P', LegalBlackMove P P' /\ WhiteWin P' n) -> BlackLoss P (S n)
 with
 WhiteWin N: Position N -> nat -> Prop :=
-  | white_win: forall P n, (exists P', LegalWhiteMove P P' /\ BlackLoss P' n) -> WhiteWin P (S n).
+  | white_win: forall P n, (exists P', LegalWhiteMove P P' /\ BlackLoss P' n) -> (~ InsufficientMaterial P) -> WhiteWin P (S n).
